@@ -1,0 +1,83 @@
+@projectId = {{$random.alphabetic(10)}}
+@buildTypeId = {{$random.alphabetic(10)}}
+
+### 0. Generate auth token
+GET http://localhost:8111/authenticationTest.html?csrf
+Authorization: Basic admin admin
+
+> {%
+    client.global.set("token", response.body)
+%}
+
+###
+POST http://localhost:8111/app/rest/projects
+Content-Type: application/json
+Accept: application/json
+X-TC-CSRF-Token: {{token}}
+
+{
+  "parentProject": {
+    "locator": "_Root"
+  },
+  "name": "{{projectId}}",
+  "id": "{{projectId}}",
+  "copyAllAssociatedSettings": true
+}
+
+
+
+###
+POST http://localhost:8111/app/rest/buildTypes
+Content-Type: application/json
+Accept: application/json
+X-TC-CSRF-Token: {{token}}
+
+{
+  "id": "{{buildTypeId}}",
+  "name": "{{buildTypeId}}",
+  "project": {
+    "id": "{{projectId}}"
+  },
+  "steps": {
+    "step": [
+      {
+        "name": "myCommandLineStep",
+        "type": "simpleRunner",
+        "properties": {
+          "property": [
+            {
+              "name": "script.content",
+              "value": "echo 'Hello World!'"
+            },
+            {
+              "name": "teamcity.step.mode",
+              "value": "default"
+            },
+            {
+              "name": "use.custom.script",
+              "value": "true"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+###
+POST http://localhost:8111/app/rest/buildQueue
+Content-Type: application/json
+Accept: application/json
+X-TC-CSRF-Token: {{token}}
+
+{
+  "buildType": {
+    "id": "{{buildTypeId}}"
+  }
+}
+
+###
+GET http://localhost:8111/app/rest/builds?locator=id:3
+Content-Type: application/json
+Accept: application/json
+X-TC-CSRF-Token: {{token}}
