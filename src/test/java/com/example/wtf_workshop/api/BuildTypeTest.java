@@ -5,7 +5,11 @@ import com.example.wtf_workshop.api.models.BuildType;
 import com.example.wtf_workshop.api.models.Project;
 import com.example.wtf_workshop.api.models.User;
 import com.example.wtf_workshop.api.requests.CheckedRequests;
+import com.example.wtf_workshop.api.requests.UncheckedRequests;
+import com.example.wtf_workshop.api.requests.unchecked.UncheckedBase;
 import com.example.wtf_workshop.api.spec.Specifications;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -38,11 +42,24 @@ public class BuildTypeTest extends BaseApiTest {
 
     @Test(description = "User should not be able to create two build types with the same id", groups = {"Negative", "CRUD"})
     public void userCreatesTwoBuildTypesWithTheSameIdTest() {
-        step("Create user");
-        step("Create project by user");
-        step("Create buildType1 for project by user");
-        step("Create buildType2 for project by user with id as buildType1 for project by user");
-        step("Check buildType2 was not created with bad request code");
+        var user = generate(User.class);
+
+        superUserCheckedRequests.getRequest(USERS).create(user);
+        var userCheckedRequests = new CheckedRequests(Specifications.authSpec(user));
+
+        var project = generate(Project.class);
+
+        project = userCheckedRequests.<Project>getRequest(PROJECTS).create(project);
+
+        var buildType1 = generate(Arrays.asList(project), BuildType.class);
+        var buildType2 = generate(Arrays.asList(project), BuildType.class, buildType1.getId());
+
+        userCheckedRequests.getRequest(BUILD_TYPES).create(buildType1);
+
+        new UncheckedRequests(Specifications.authSpec(user)).getRequest(BUILD_TYPES)
+                .create(buildType2)
+                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body(Matchers.containsString("The build configuration / template ID \"%s\" is already used by another configuration or template".formatted(buildType1.getId())));
     }
 
     @Test(description = "Project admin should be able to create build type for their project", groups = {"Positive", "Roles"})
