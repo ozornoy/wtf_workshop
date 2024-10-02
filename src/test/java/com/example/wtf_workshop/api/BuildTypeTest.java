@@ -3,10 +3,8 @@ package com.example.wtf_workshop.api;
 
 import com.example.wtf_workshop.api.models.BuildType;
 import com.example.wtf_workshop.api.models.Project;
-import com.example.wtf_workshop.api.models.User;
 import com.example.wtf_workshop.api.requests.CheckedRequests;
 import com.example.wtf_workshop.api.requests.UncheckedRequests;
-import com.example.wtf_workshop.api.requests.unchecked.UncheckedBase;
 import com.example.wtf_workshop.api.spec.Specifications;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
@@ -22,44 +20,33 @@ import static io.qameta.allure.Allure.step;
 public class BuildTypeTest extends BaseApiTest {
     @Test(description = "User should be able to create build type", groups = {"Positive", "CRUD"})
     public void userCreatesBuildTypeTest() {
-        var user = generate(User.class);
+        superUserCheckedRequests.getRequest(USERS).create(testData.getUser());
+        var userCheckedRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
 
-        superUserCheckedRequests.getRequest(USERS).create(user);
-        var userCheckedRequests = new CheckedRequests(Specifications.authSpec(user));
+        userCheckedRequests.<Project>getRequest(PROJECTS).create(testData.getProject());
 
-        var project = generate(Project.class);
+        userCheckedRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        project = userCheckedRequests.<Project>getRequest(PROJECTS).create(project);
+        var createdBuildType = userCheckedRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
 
-        var buildType = generate(Arrays.asList(project), BuildType.class);
-
-        userCheckedRequests.getRequest(BUILD_TYPES).create(buildType);
-
-        var createdBuildType = userCheckedRequests.<BuildType>getRequest(BUILD_TYPES).read(buildType.getId());
-
-        softy.assertEquals(buildType.getName(), createdBuildType.getName(), "Build type name is not correct");
+        softy.assertEquals(testData.getBuildType().getName(), createdBuildType.getName(), "Build type name is not correct");
     }
 
     @Test(description = "User should not be able to create two build types with the same id", groups = {"Negative", "CRUD"})
     public void userCreatesTwoBuildTypesWithTheSameIdTest() {
-        var user = generate(User.class);
+        var buildTypeWithSameId = generate(Arrays.asList(testData.getProject()), BuildType.class, testData.getBuildType().getId());
+        
+        superUserCheckedRequests.getRequest(USERS).create(testData.getUser());
+        var userCheckedRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
 
-        superUserCheckedRequests.getRequest(USERS).create(user);
-        var userCheckedRequests = new CheckedRequests(Specifications.authSpec(user));
+        userCheckedRequests.<Project>getRequest(PROJECTS).create(testData.getProject());
 
-        var project = generate(Project.class);
+        userCheckedRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        project = userCheckedRequests.<Project>getRequest(PROJECTS).create(project);
-
-        var buildType1 = generate(Arrays.asList(project), BuildType.class);
-        var buildType2 = generate(Arrays.asList(project), BuildType.class, buildType1.getId());
-
-        userCheckedRequests.getRequest(BUILD_TYPES).create(buildType1);
-
-        new UncheckedRequests(Specifications.authSpec(user)).getRequest(BUILD_TYPES)
-                .create(buildType2)
+        new UncheckedRequests(Specifications.authSpec(testData.getUser())).getRequest(BUILD_TYPES)
+                .create(buildTypeWithSameId)
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("The build configuration / template ID \"%s\" is already used by another configuration or template".formatted(buildType1.getId())));
+                .body(Matchers.containsString("The build configuration / template ID \"%s\" is already used by another configuration or template".formatted(testData.getBuildType().getId())));
     }
 
     @Test(description = "Project admin should be able to create build type for their project", groups = {"Positive", "Roles"})
