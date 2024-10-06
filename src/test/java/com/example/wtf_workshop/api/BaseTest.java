@@ -1,5 +1,6 @@
 package com.example.wtf_workshop.api;
 
+import com.example.wtf_workshop.api.generators.TestDataStorage;
 import com.example.wtf_workshop.api.models.TestData;
 import com.example.wtf_workshop.api.requests.CheckedRequests;
 import com.example.wtf_workshop.api.spec.Specifications;
@@ -23,5 +24,6 @@ public class BaseTest {
     @AfterMethod(alwaysRun = true)
     public void afterTest() {
         softy.assertAll();
+        TestDataStorage.getStorage().deleteCreatedEntity();
     }
 }

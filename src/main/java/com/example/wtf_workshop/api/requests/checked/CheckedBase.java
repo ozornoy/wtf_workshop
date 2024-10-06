@@ -1,6 +1,7 @@
 package com.example.wtf_workshop.api.requests.checked;
 
 import com.example.wtf_workshop.api.enums.Endpoint;
+import com.example.wtf_workshop.api.generators.TestDataStorage;
 import com.example.wtf_workshop.api.models.BaseModel;
 import com.example.wtf_workshop.api.requests.CrudInterface;
 import com.example.wtf_workshop.api.requests.Request;
@@ -19,10 +20,14 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
 
     @Override
     public T create(BaseModel model) {
-        return (T) uncheckedBase
+        var createdModel = uncheckedBase
                 .create(model)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
                 .extract().as(endpoint.getModelClass());
+
+        TestDataStorage.getStorage().addCreatedEntity(endpoint, createdModel);
+
+        return (T) createdModel;
     }
 
     @Override
