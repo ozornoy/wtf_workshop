@@ -6,14 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Steps extends BaseModel {
-    private Integer count;
-    private List<Step> step;
+public class Build extends BaseModel {
+    private String id;
+    private String status;
+    private String state;
 }

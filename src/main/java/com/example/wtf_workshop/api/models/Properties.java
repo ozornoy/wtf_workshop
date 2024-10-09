@@ -1,5 +1,6 @@
 package com.example.wtf_workshop.api.models;
 
+import com.example.wtf_workshop.api.annotations.Optional;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Steps extends BaseModel {
+public class Properties extends BaseModel {
     private Integer count;
-    private List<Step> step;
+    @Optional
+    private List<Property> property;
 }

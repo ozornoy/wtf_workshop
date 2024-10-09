@@ -1,9 +1,7 @@
 package com.example.wtf_workshop.api;
 
 
-import com.example.wtf_workshop.api.models.BuildType;
-import com.example.wtf_workshop.api.models.Project;
-import com.example.wtf_workshop.api.models.Roles;
+import com.example.wtf_workshop.api.models.*;
 import com.example.wtf_workshop.api.requests.CheckedRequests;
 import com.example.wtf_workshop.api.requests.UncheckedRequests;
 import com.example.wtf_workshop.api.spec.Specifications;
@@ -12,9 +10,12 @@ import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.wtf_workshop.api.enums.Endpoint.*;
 import static com.example.wtf_workshop.api.generators.TestDataGenerator.generate;
+import static org.awaitility.Awaitility.await;
+import static org.testng.AssertJUnit.assertEquals;
 
 @Test(groups = {"Regression"})
 public class BuildTypeTest extends BaseApiTest {
