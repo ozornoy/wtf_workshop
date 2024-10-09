@@ -10,12 +10,9 @@ import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.wtf_workshop.api.enums.Endpoint.*;
 import static com.example.wtf_workshop.api.generators.TestDataGenerator.generate;
-import static org.awaitility.Awaitility.await;
-import static org.testng.AssertJUnit.assertEquals;
 
 @Test(groups = {"Regression"})
 public class BuildTypeTest extends BaseApiTest {

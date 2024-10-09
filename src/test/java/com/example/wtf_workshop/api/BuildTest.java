@@ -32,7 +32,7 @@ public class BuildTest extends BaseApiTest {
         userCheckedRequests.getRequest(BUILD_QUEUE).startBuild(buildQueue);
 
         await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
-            var builds = userCheckedRequests.<Builds>getRequest(BUILDS)
+            var builds = userCheckedRequests.<Builds>getRequest(BUILDS_SEARCH)
                     .search("buildType:" + testData.getBuildType().getId());
             if (builds.getCount() > 0) {
                 String state = builds.getBuild().get(0).getState();
@@ -41,7 +41,7 @@ public class BuildTest extends BaseApiTest {
             return false;
         });
 
-        var build = userCheckedRequests.<Builds>getRequest(BUILDS)
+        var build = userCheckedRequests.<Builds>getRequest(BUILDS_SEARCH)
                 .search("buildType:" + testData.getBuildType().getId()).getBuild().get(0);
         assertEquals("Expected build status to be SUCCESS. Actual status: " + build.getStatus(),
                 "SUCCESS", build.getStatus());
