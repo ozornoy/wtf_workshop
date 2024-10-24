@@ -4,8 +4,9 @@ import org.testng.annotations.Test;
 
 import static io.qameta.allure.Allure.step;
 
+@Test(groups = {"Regression"})
 public class CreateProjectTest extends BaseUiTest{
-    @Test(description = "User should be able to create project", groups = {"Regression", "Positive"})
+    @Test(description = "User should be able to create project", groups = {"Positive"})
     public void userCreatesProject() {
         // подготовка окружения
         step("Login as User");
@@ -27,7 +28,7 @@ public class CreateProjectTest extends BaseUiTest{
     }
 
 
-    @Test(description = "User should not na able to create project without name", groups = {"Regression", "Negative"})
+    @Test(description = "User should not na able to create project without name", groups = {"Negative"})
     public void userCreatesProjectWithoutName() {
         // подготовка окружения
         step("Login as user");
