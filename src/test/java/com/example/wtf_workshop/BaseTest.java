@@ -1,4 +1,4 @@
-package com.example.wtf_workshop.api;
+package com.example.wtf_workshop;
 
 import com.example.wtf_workshop.api.generators.TestDataStorage;
 import com.example.wtf_workshop.api.models.TestData;
