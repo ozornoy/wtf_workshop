@@ -1,22 +1,23 @@
 package com.example.wtf_workshop.ui;
 
+import com.example.wtf_workshop.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
 import static io.qameta.allure.Allure.step;
 
 @Test(groups = {"Regression"})
 public class CreateProjectTest extends BaseUiTest{
+    private static final String REPO_URL = "https://github.com/ozornoy/wtf_workshop";
+
     @Test(description = "User should be able to create project", groups = {"Positive"})
     public void userCreatesProject() {
         // подготовка окружения
-        step("Login as User");
+        loginAs(testData.getUser());
 
         // взаимодействие с UI
-        step("Open 'Create Project Page' (http://localhost:8111/admin/createObjectMenu.html)");
-        step("Send all project parameters (Repository Url)");
-        step("CLick 'Proceed'");
-        step("Fix Project name and Build Type name values");
-        step("CLick 'Proceed'");
+        CreateProjectPage.open("_Root")
+                .createForm(REPO_URL)
+                .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
 
         // проверка состояния API
         // (корректность отправки данных с UI на API)
