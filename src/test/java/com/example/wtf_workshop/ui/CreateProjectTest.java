@@ -1,5 +1,9 @@
 package com.example.wtf_workshop.ui;
 
+import com.codeborne.selenide.Condition;
+import com.example.wtf_workshop.api.enums.Endpoint;
+import com.example.wtf_workshop.api.models.Project;
+import com.example.wtf_workshop.ui.pages.ProjectPage;
 import com.example.wtf_workshop.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
@@ -21,11 +25,12 @@ public class CreateProjectTest extends BaseUiTest{
 
         // проверка состояния API
         // (корректность отправки данных с UI на API)
-        step("Check that all entites (project & buildType) was successfully created with correct data on Api level");
+        var createdProject = superUserCheckedRequests.<Project>getRequest(Endpoint.PROJECTS).read("name:" + testData.getProject().getName());
+        softy.assertNotNull(createdProject);
 
         // проверка состояния UI
         // (корректность считывания данных и отображение данных на UI)
-        step("Check that project visible on Projects Page (http://localhost:8111/favorite/projects)");
+        ProjectPage.open(createdProject.getId()).title.shouldHave(Condition.exactText(testData.getProject().getName()));
     }
 
 

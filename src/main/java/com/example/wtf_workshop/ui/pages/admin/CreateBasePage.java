@@ -1,5 +1,6 @@
 package com.example.wtf_workshop.ui.pages.admin;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;
 import com.example.wtf_workshop.ui.pages.BasePage;
@@ -12,9 +13,11 @@ public abstract class CreateBasePage extends BasePage {
     protected SelenideElement urlInput = $("#url");
     protected SelenideElement proceedButton = $(Selectors.byAttribute("value", "Proceed"));
     protected SelenideElement buildTypeUInput = $("#buildTypeName");
+    protected SelenideElement connectionSuccessfulMessage = $(".connectionSuccessful");
 
     protected void baseCreateForm(String url) {
         urlInput.val(url);
         proceedButton.click();
+        connectionSuccessfulMessage.should(Condition.appear, BASE_WAITING);
     }
 }

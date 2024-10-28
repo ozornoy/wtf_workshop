@@ -21,18 +21,18 @@ public class UncheckedBase extends Request implements CrudInterface, ManageBuild
     }
 
     @Override
-    public Response read(String id) {
-        return RestAssured.given().spec(spec).get(endpoint.getUrl() + "/id:" + id);
+    public Response read(String locator) {
+        return RestAssured.given().spec(spec).get(endpoint.getUrl() + "/" + locator);
     }
 
     @Override
-    public Response update(String id, BaseModel model) {
-        return RestAssured.given().spec(spec).body(model).put(endpoint.getUrl() + "/id:" + id);
+    public Response update(String locator, BaseModel model) {
+        return RestAssured.given().spec(spec).body(model).put(endpoint.getUrl() + "/" + locator);
     }
 
     @Override
-    public Response delete(String id) {
-        return RestAssured.given().spec(spec).delete(endpoint.getUrl() + "/id:" + id);
+    public Response delete(String locator) {
+        return RestAssured.given().spec(spec).delete(endpoint.getUrl() + "/" + locator);
     }
 
     @Override
