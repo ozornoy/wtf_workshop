@@ -20,10 +20,9 @@ public class CreateProjectPage extends CreateBasePage {
         return this;
     }
 
-    public ProjectsPage setupProject(String projectName, String buildTypeName) {
+    public void setupProject(String projectName, String buildTypeName) {
         projectNameInput.val(projectName);
         buildTypeUInput.val(buildTypeName);
         proceedButton.click();
-        return Selenide.page(ProjectsPage.class);
     }
 }
