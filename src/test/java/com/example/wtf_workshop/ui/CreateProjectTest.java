@@ -2,25 +2,28 @@ package com.example.wtf_workshop.ui;
 
 import com.codeborne.selenide.Condition;
 import com.example.wtf_workshop.api.enums.Endpoint;
+import com.example.wtf_workshop.api.generators.TestDataStorage;
 import com.example.wtf_workshop.api.models.Project;
 import com.example.wtf_workshop.ui.pages.ProjectPage;
 import com.example.wtf_workshop.ui.pages.ProjectsPage;
 import com.example.wtf_workshop.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
-import static io.qameta.allure.Allure.step;
+import static com.example.wtf_workshop.api.enums.Endpoint.PROJECTS;
+import static org.hamcrest.Matchers.equalTo;
 
 @Test(groups = {"Regression"})
 public class CreateProjectTest extends BaseUiTest{
     private static final String REPO_URL = "https://github.com/ozornoy/wtf_workshop";
 
     @Test(description = "User should be able to create project", groups = {"Positive"})
-    public void userCreatesProject() {
+    public void userCreatesProjectTest() {
         loginAs(testData.getUser());
 
         CreateProjectPage.open("_Root")
                 .createForm(REPO_URL)
                 .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
+        TestDataStorage.getStorage().addCreatedEntity(PROJECTS, testData.getProject());
 
         var createdProject = superUserCheckedRequests.<Project>getRequest(Endpoint.PROJECTS)
                 .read("name:" + testData.getProject().getName());
@@ -36,22 +39,17 @@ public class CreateProjectTest extends BaseUiTest{
 
 
     @Test(description = "User should not na able to create project without name", groups = {"Negative"})
-    public void userCreatesProjectWithoutName() {
-        // подготовка окружения
-        step("Login as user");
-        step("Check number of projects");
+    public void userCreatesProjectWithoutNameTest() {
+        loginAs(testData.getUser());
 
-        // взаимодействие с UI
-        step("Open 'Create Project Page' (http://localhost:8111/admin/createObjectMenu.html)");
-        step("Send all project parameters (Repository Url)");
-        step("CLick 'Proceed'");
+        var createProjectPage = CreateProjectPage.open("_Root").createForm(REPO_URL);
+        createProjectPage.setupProject("", testData.getBuildType().getName());
+        TestDataStorage.getStorage().addCreatedEntity(PROJECTS, testData.getProject());
 
-        // проверка состояния API
-        // (корректность отправки данных с UI на API)
-        step("Check that number of projects did not change");
+        superUserUnCheckedRequests.getRequest(Endpoint.PROJECTS)
+                .search(testData.getProject().getName())
+                .then().assertThat().body("count", equalTo(0));
 
-        // проверка состояния UI
-        // (корректность считывания данных и отображение данных на UI)
-        step("Check that errors appears 'Project name must not be empty'");
+        createProjectPage.checkProjectNameErrorText("Project name must not be empty");
     }
 }

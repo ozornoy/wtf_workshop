@@ -3,6 +3,7 @@ package com.example.wtf_workshop;
 import com.example.wtf_workshop.api.generators.TestDataStorage;
 import com.example.wtf_workshop.api.models.TestData;
 import com.example.wtf_workshop.api.requests.CheckedRequests;
+import com.example.wtf_workshop.api.requests.UncheckedRequests;
 import com.example.wtf_workshop.api.spec.Specifications;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -13,6 +14,7 @@ import static com.example.wtf_workshop.api.generators.TestDataGenerator.generate
 public class BaseTest {
     protected SoftAssert softy;
     protected CheckedRequests superUserCheckedRequests = new CheckedRequests(Specifications.superUserSpec());
+    protected UncheckedRequests superUserUnCheckedRequests = new UncheckedRequests(Specifications.superUserSpec());
     protected TestData testData;
     
     @BeforeMethod(alwaysRun = true)
