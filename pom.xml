@@ -19,6 +19,7 @@
         <lombok.version>1.18.30</lombok.version>
         <jackson.version>2.18.0</jackson.version>
         <awaitility.version>4.1.0</awaitility.version>
+        <selenide.version>7.4.3</selenide.version>
     </properties>
 
     <dependencies>
@@ -26,6 +27,11 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
             <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide</artifactId>
+            <version>${selenide.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codeborne</groupId>
