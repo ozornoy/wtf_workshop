@@ -4,6 +4,7 @@ import com.example.wtf_workshop.api.config.Config;
 import com.example.wtf_workshop.api.models.User;
 import com.github.viclovsky.swagger.coverage.FileSystemOutputWriter;
 import com.github.viclovsky.swagger.coverage.SwaggerCoverageRestAssured;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -24,6 +25,7 @@ public class Specifications {
                         Paths.get("target/" + OUTPUT_DIRECTORY)
                 )
         ));
+        requestBuilder.addFilter(new AllureRestAssured());
         requestBuilder.setContentType(ContentType.JSON);
         requestBuilder.setAccept(ContentType.JSON);
         return requestBuilder;
