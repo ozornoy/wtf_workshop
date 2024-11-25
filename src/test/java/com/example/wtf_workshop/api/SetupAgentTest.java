@@ -8,6 +8,6 @@ import org.testng.annotations.Test;
 public class SetupAgentTest extends BaseApiTest{
     @Test(groups = {"Setup"})
     public void authTeamCityAgentTest() {
-        new ManageAgentRequest(Specifications.superUserSpec()).auth_agent();
+        new ManageAgentRequest(Specifications.superUserSpec()).auth_agent("true");
     }
 }
