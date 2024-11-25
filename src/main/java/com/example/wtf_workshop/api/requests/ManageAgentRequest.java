@@ -14,7 +14,7 @@ public class ManageAgentRequest {
     }
 
     public void auth_agent(String authorize) {
-        String agentAuthUrl = String.format(AGENT_AUTH_URL_TEMPLATE, "ip_" + Config.getProperty("agent_ip"));
+        String agentAuthUrl = String.format(AGENT_AUTH_URL_TEMPLATE, "name:ip_" + Config.getProperty("agent_ip"));
         RestAssured.given()
                 .spec(spec)
                 .header("Content-Type", "text/plain")
