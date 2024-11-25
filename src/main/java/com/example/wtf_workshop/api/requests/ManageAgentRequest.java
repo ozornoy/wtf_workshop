@@ -13,7 +13,7 @@ public class ManageAgentRequest {
         this.spec = spec;
     }
 
-    public void auth_agent(Boolean authorize) {
+    public void auth_agent(String authorize) {
         String agentAuthUrl = String.format(AGENT_AUTH_URL_TEMPLATE, "name:ip_" + Config.getProperty("agent_ip"));
         RestAssured.given()
                 .spec(spec)
