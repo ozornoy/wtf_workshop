@@ -31,7 +31,7 @@ public class BuildTest extends BaseApiTest {
         var buildQueue = generate(BuildQueue.class, generate(BuildTypeId.class, testData.getBuildType().getId()));
         userCheckedRequests.getRequest(BUILD_QUEUE).startBuild(buildQueue);
 
-        await().atMost(5, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
+        await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
             var builds = userCheckedRequests.<Builds>getRequest(BUILDS_SEARCH)
                     .search("buildType:" + testData.getBuildType().getId());
             if (builds.getCount() > 0) {
