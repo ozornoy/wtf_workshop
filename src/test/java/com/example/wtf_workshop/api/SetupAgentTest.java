@@ -14,7 +14,7 @@ public class SetupAgentTest extends BaseApiTest{
         var agentRequester = new ManageAgentRequest(Specifications.superUserSpec());
 
         await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
-            var agents = agentRequester.get_agents();
+            var agents = agentRequester.get_agents("?locator=connected:true,authorized:false");
             if (agents.getCount() == 0) {
                 return false;
             }

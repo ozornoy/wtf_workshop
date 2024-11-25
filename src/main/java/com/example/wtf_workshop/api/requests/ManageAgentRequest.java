@@ -7,7 +7,7 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 
 public class ManageAgentRequest {
-    private static final String AGENTS_URL = "/app/rest/agents";
+    private static final String AGENTS_URL = "/app/rest/agents%s";
     private static final String AGENT_AUTH_URL_TEMPLATE = "/app/rest/agents/%s/authorized";
     private RequestSpecification spec;
 
@@ -15,10 +15,11 @@ public class ManageAgentRequest {
         this.spec = spec;
     }
 
-    public Agents get_agents() {
+    public Agents get_agents(String locator) {
+        String agents_url = String.format(AGENTS_URL, locator);
         return RestAssured.given()
                 .spec(spec)
-                .get(AGENTS_URL)
+                .get(agents_url)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
                 .extract().as(Agents.class);
 
