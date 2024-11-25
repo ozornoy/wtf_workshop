@@ -30,8 +30,7 @@ public class RunBuildTest extends BaseUiTest{
                 .checkBuildsCount(buildElementsSize + 1)
                 .getBuilds().get(0);
 
-        buildElement.checkStatus("Running")
-                .checkStatus("Success")
+        buildElement.successStatusIconShouldBeVisible()
                 .clickOnDetailsButton()
                 .clickOnDetailsTab("Build Log");
         var buildStepLogMessage = new BuildPage().getLogs().stream()

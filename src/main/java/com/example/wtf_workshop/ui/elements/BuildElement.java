@@ -11,13 +11,13 @@ import java.util.Objects;
 
 @Getter
 public class BuildElement extends BasePageElement{
-    private SelenideElement status;
+    private SelenideElement successStatusIcon;
     private SelenideElement detailsButton;
     private ElementsCollection detailsTabElements;
 
     public BuildElement(SelenideElement element) {
         super(element);
-        this.status = find("[class*=Build__status]");
+        this.successStatusIcon = find("[data-test-icon=finished_green]");
         this.detailsButton = find("[class*=BuildDetails__button]");
         this.detailsTabElements = findAll("[class*=BuildDetailsTabs__link]");
     }
@@ -32,11 +32,8 @@ public class BuildElement extends BasePageElement{
         return Selenide.page(BuildPage.class);
     }
 
-    public BuildElement checkStatus(String status_name) {
-        var status_icon =  Objects.equals(status_name, "Running")
-                ? "[data-test-icon=running_green]"
-                : "[data-test-icon=finished_green]";
-        find(status_icon).shouldBe(Condition.visible, BASE_WAITING);
+    public BuildElement successStatusIconShouldBeVisible() {
+        this.successStatusIcon.shouldBe(Condition.visible, BASE_WAITING);
         return this;
     }
 }
