@@ -46,10 +46,10 @@ public class CreateProjectTest extends BaseUiTest{
         createProjectPage.setupProject("", testData.getBuildType().getName());
         TestDataStorage.getStorage().addCreatedEntity(PROJECTS, testData.getProject());
 
+        createProjectPage.checkProjectNameErrorText("Project name must not be empty");
+
         superUserUnCheckedRequests.getRequest(Endpoint.PROJECTS)
                 .search(testData.getProject().getName())
                 .then().assertThat().body("count", equalTo(0));
-
-        createProjectPage.checkProjectNameErrorText("Project name must not be empty");
     }
 }

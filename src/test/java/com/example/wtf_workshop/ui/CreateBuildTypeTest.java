@@ -21,15 +21,15 @@ public class CreateBuildTypeTest extends BaseUiTest{
                 .createForm(REPO_URL)
                 .setupBuildType(testData.getBuildType().getName());
 
+        var createdBuildType = superUserCheckedRequests.getRequest(BUILD_TYPES)
+                .read("name:" + testData.getBuildType().getName());
+        softy.assertNotNull(createdBuildType);
+
         var buildTypeExists = ProjectPage.open(testData.getProject().getId())
                 .getBuildTypes().stream()
                 .filter(buildTypeElement -> buildTypeElement.getName().text().equals(testData.getBuildType().getName()))
                 .limit(2).count() == 1;
         softy.assertTrue(buildTypeExists);
-
-        var createdBuildType = superUserCheckedRequests.getRequest(BUILD_TYPES)
-                .read("name:" + testData.getBuildType().getName());
-        softy.assertNotNull(createdBuildType);
     }
 
     @Test(description = "User should not na able to create build type without name", groups = {"Negative"})
@@ -41,10 +41,10 @@ public class CreateBuildTypeTest extends BaseUiTest{
                 .createForm(REPO_URL);
         createBuildTypePage.setupBuildType("");
 
+        createBuildTypePage.checkBuildTypeNameErrorText("Build configuration name must not be empty");
+
         superUserUnCheckedRequests.getRequest(BUILD_TYPES)
                 .read("name:" + testData.getBuildType().getName())
                 .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-
-        createBuildTypePage.checkBuildTypeNameErrorText("Build configuration name must not be empty");
     }
 }
