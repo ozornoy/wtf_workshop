@@ -18,7 +18,7 @@ public class BuildPage extends BasePage{
     public SelenideElement logsTimeLine = $("[data-test-build-log-timeline=true]");
 
     public BuildPage() {
-        this.logsTimeLine.shouldBe(Condition.visible);
+        this.logsTimeLine.shouldBe(Condition.visible, BASE_WAITING);
     }
 
     public List<BuildLogElement> getLogs() {

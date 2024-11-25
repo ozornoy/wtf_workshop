@@ -41,10 +41,10 @@ public class CreateBuildTypeTest extends BaseUiTest{
                 .createForm(REPO_URL);
         createBuildTypePage.setupBuildType("");
 
+        createBuildTypePage.checkBuildTypeNameErrorText("Build configuration name must not be empty");
+
         superUserUnCheckedRequests.getRequest(BUILD_TYPES)
                 .read("name:" + testData.getBuildType().getName())
                 .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-
-        createBuildTypePage.checkBuildTypeNameErrorText("Build configuration name must not be empty");
     }
 }

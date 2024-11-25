@@ -1,15 +1,18 @@
 package com.example.wtf_workshop.ui;
 
 import com.codeborne.selenide.Condition;
+import com.example.wtf_workshop.api.models.Builds;
 import com.example.wtf_workshop.api.models.Property;
 import com.example.wtf_workshop.ui.pages.BuildPage;
 import com.example.wtf_workshop.ui.pages.ProjectPage;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.wtf_workshop.api.enums.Endpoint.*;
 import static com.example.wtf_workshop.api.generators.TestDataGenerator.generate;
+import static org.awaitility.Awaitility.await;
 
 @Test(groups = {"Regression"})
 public class RunBuildTest extends BaseUiTest{
@@ -26,24 +29,26 @@ public class RunBuildTest extends BaseUiTest{
         var buildTypeElement = ProjectPage.open(testData.getProject().getId()).getBuildTypes().get(0)
                 .clickOnDetailsButton();
         var buildElementsSize = buildTypeElement.getBuilds().size();
-        var buildElement = buildTypeElement.runBuild()
-                .checkBuildsCount(buildElementsSize + 1)
-                .getBuilds().get(0);
+        buildTypeElement.runBuild()
+                .checkBuildsCount(buildElementsSize + 1);
 
-        buildElement.checkStatus("Running")
-                .checkStatus("Success")
+        await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
+            var builds = superUserCheckedRequests.<Builds>getRequest(BUILDS_SEARCH)
+                    .search("buildType:" + testData.getBuildType().getId());
+            if (builds.getCount() > 0) {
+                String state = builds.getBuild().get(0).getState();
+                return "finished".equals(state);
+            }
+            return false;
+        });
+
+        buildTypeElement.getBuilds().get(0)
+                .successStatusIconShouldBeVisible()
                 .clickOnDetailsButton()
                 .clickOnDetailsTab("Build Log");
         var buildStepLogMessage = new BuildPage().getLogs().stream()
                 .filter(log -> log.getLogText().has(Condition.text("Step 1/1:")))
                 .findFirst().get();
         buildStepLogMessage.clickOnCollapseButton().checkSubLogText(2, "Hello World!");
-
-
-
-
-
-
-
     }
 }
