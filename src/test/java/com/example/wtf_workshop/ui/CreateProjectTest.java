@@ -25,16 +25,18 @@ public class CreateProjectTest extends BaseUiTest{
                 .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
         TestDataStorage.getStorage().addCreatedEntity(PROJECTS, testData.getProject());
 
+        var projectExists = ProjectsPage.open()
+                .getProjects().stream()
+                .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
+        softy.assertTrue(projectExists);
+
         var createdProject = superUserCheckedRequests.<Project>getRequest(Endpoint.PROJECTS)
                 .read("name:" + testData.getProject().getName());
         softy.assertNotNull(createdProject);
 
         ProjectPage.open(createdProject.getId())
                 .title.shouldHave(Condition.exactText(testData.getProject().getName()));
-        var projectExists = ProjectsPage.open()
-                .getProjects().stream()
-                .anyMatch(project -> project.getName().text().equals(testData.getProject().getName()));
-        softy.assertTrue(projectExists);
+
     }
 
 
