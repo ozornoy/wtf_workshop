@@ -26,11 +26,11 @@ public class RunBuildTest extends BaseUiTest{
         var buildTypeElement = ProjectPage.open(testData.getProject().getId()).getBuildTypes().get(0)
                 .clickOnDetailsButton();
         var buildElementsSize = buildTypeElement.getBuilds().size();
-        var buildElement = buildTypeElement.runBuild()
-                .checkBuildsCount(buildElementsSize + 1)
-                .getBuilds().get(0);
+        buildTypeElement.runBuild()
+                .checkBuildsCount(buildElementsSize + 1);
 
-        buildElement.successStatusIconShouldBeVisible()
+        buildTypeElement.getBuilds().get(0)
+                .successStatusIconShouldBeVisible()
                 .clickOnDetailsButton()
                 .clickOnDetailsTab("Build Log");
         var buildStepLogMessage = new BuildPage().getLogs().stream()
