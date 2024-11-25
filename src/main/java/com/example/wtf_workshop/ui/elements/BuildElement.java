@@ -7,6 +7,8 @@ import com.codeborne.selenide.SelenideElement;
 import com.example.wtf_workshop.ui.pages.BuildPage;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Getter
 public class BuildElement extends BasePageElement{
     private SelenideElement status;
@@ -31,7 +33,10 @@ public class BuildElement extends BasePageElement{
     }
 
     public BuildElement checkStatus(String status_name) {
-        this.status.shouldBe(Condition.visible, BASE_WAITING);
+        var status_icon =  Objects.equals(status_name, "Running")
+                ? "[data-test-icon=running_green]"
+                : "[data-test-icon=finished_green]";
+        find(status_icon).shouldBe(Condition.visible, BASE_WAITING);
         return this;
     }
 }
