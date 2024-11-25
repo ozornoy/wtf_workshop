@@ -84,3 +84,7 @@ runs:
     - name: Authorize TeamCity agent
       shell: bash
       run: ./mvnw clean test -Dtest=SetupAgentTest#authTeamCityAgentTest
+
+    - name: Print Agent container logs
+      shell: bash
+      run: docker logs teamcity-agent
