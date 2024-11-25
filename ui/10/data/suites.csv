@@ -1,0 +1,2 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Mon Nov 25 05:45:06 GMT 2024","Mon Nov 25 05:46:00 GMT 2024","54103","Surefire suite","Surefire test","com.example.wtf_workshop.ui.SetupServerTest","com.example.wtf_workshop.ui.SetupServerTest","setupTeamcityServerTest","setupTeamcityServerTest",""
