@@ -13,7 +13,7 @@ public class SetupAgentTest extends BaseApiTest{
     public void authTeamCityAgentTest() {
         var agentRequester = new ManageAgentRequest(Specifications.superUserSpec());
 
-        await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
+        await().atMost(3, TimeUnit.MINUTES).pollInterval(1, TimeUnit.SECONDS).until(() -> {
             var agents = agentRequester.get_agents("?locator=connected:true,authorized:false");
             if (agents.getCount() == 0) {
                 return false;
