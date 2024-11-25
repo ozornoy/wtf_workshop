@@ -38,12 +38,5 @@ public class RunBuildTest extends BaseUiTest{
                 .filter(log -> log.getLogText().has(Condition.text("Step 1/1:")))
                 .findFirst().get();
         buildStepLogMessage.clickOnCollapseButton().checkSubLogText(2, "Hello World!");
-
-
-
-
-
-
-
     }
 }
